@@ -169,7 +169,7 @@
                 for (let i = 0; i < votes.length; i++) {
                     let text = "";
                     if (votes[i] > 0){
-                        text = (votesD[i] > votesR[i] ? "Democrat" : "Republican") + " (D=" + votesD[i] + " R=" + votesR[i] + ")" 
+                        text = (votesD[i] > votesR[i] ? "Democrat" : "Republican") + " (D=" + votesD[i] + " R=" + votesR[i] + ") " + votes[i]
                     }
                     document.getElementById("vote" + i).textContent = text;
 
