@@ -116,6 +116,71 @@
                 recount();
             }
 
+            function saveData() {
+                var textFile = null,
+                makeTextFile = function (text) {
+                    var data = new Blob([text], {type: 'text/plain'});
+
+                    // If we are replacing a previously generated file we need to
+                    // manually revoke the object URL to avoid memory leaks.
+                    if (textFile !== null) {
+                    window.URL.revokeObjectURL(textFile);
+                    }
+
+                    textFile = window.URL.createObjectURL(data);
+
+                    // returns a URL you can use as a href
+                    return textFile;
+                };
+
+                let children = document.getElementById("district_map").children;
+                let mapText = "";
+                for (let i = 0; i < children.length; i++) {
+                    let element = children[i]
+                    district = parseInt(element.classList.value.substring(5));
+                    mapText += district.toString(16);
+                    
+                }
+
+
+                var link = document.createElement('a');
+                link.setAttribute('download', 'gerrymandering.sav');
+                link.href = makeTextFile(mapText);
+                document.body.appendChild(link);
+
+                // wait for the link to be added to the document
+                window.requestAnimationFrame(function () {
+                    var event = new MouseEvent('click');
+                    link.dispatchEvent(event);
+                    document.body.removeChild(link);
+                });
+                
+            }
+
+            function readData() {
+                // document.getElementById('inputfile') 
+                //     .addEventListener('change', function() { 
+                    
+                    var fr=new FileReader(); 
+                    fr.onload=function(){ 
+                        let data = fr.result;
+                        let children = document.getElementById("district_map").children;
+                        for (let i = 0; i < children.length; i++) {
+                            let element = children[i]
+                            element.classList.value = "color" + parseInt(data.charAt(i), 16);
+                            recount();
+                        }
+
+                        // document.getElementById('output') 
+                        //         .textContent=fr.result;
+                        console.log(uploadBox.files)
+                    } 
+                    let uploadBox = document.getElementById('inputfile');
+                    fr.readAsText(uploadBox.files[0]);
+                    
+                // }) 
+            }
+
             function recolor(target) {
                 target.classList.value = "color" + selectedDistrict;
             }
@@ -834,7 +899,12 @@
                 <span id="select11" class="color11">&nbsp;</span>&nbsp;<button class="color11" onclick="selectDistrict(11);">District 12</button>&nbsp;<span id="vote11" class="color11">&nbsp;</span><br />
                 <span id="select12" class="color12">&nbsp;</span>&nbsp;<button class="color12" onclick="selectDistrict(12);">District 13</button>&nbsp;<span id="vote12" class="color12">&nbsp;</span><br />
                 <br />
-                <button onclick="reset();">Reset</button>
+                <button onclick="reset();">Reset</button><br />
+                <br />
+                <button onclick="saveData();">Save Data</button>
+                <input type="button" id="loadFileXml" value="Load Data" onclick="document.getElementById('inputfile').click();" />
+                <input type="file" style="display:none;" id="inputfile" onchange="readData();" name="file"/>
+                <!-- <input type="file" id="inputfile" onchange="readData();" ></input> -->
             </div>
         </div>
     </body>
