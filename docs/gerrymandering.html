@@ -20,29 +20,77 @@
                     flex-flow: wrap;
                 }
             }
-            .table {
+            /* .table {
                 display: inline-grid;
                 grid-template-columns: 102px 102px 102px 102px 102px 102px; 
                 max-width: 612px;
                 background: black;
                 padding: 1px;
-            }
-            .table > div {
+            } */
+            /* .table > div {
                 margin: 1px;
                 background: lightgoldenrodyellow;
                 padding: 0px;
-            }
+            } */
             .table {
                 display: grid;
-                grid-template-columns: 102px 102px 102px 102px 102px 102px; 
+                grid-template-columns: 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px 20px; 
                 max-width: 612px;
                 background: black;
                 padding: 1px;
+                cursor: crosshair;
+
             }
             .table > div {
                 margin: 1px;
-                background: lightgoldenrodyellow;
+                /* background: lightgoldenrodyellow; */
+                cursor: crosshair;
+                width: 18px;
                 padding: 0px;
+                text-align: center;
+                user-select: none;
+            }
+            .color0, .color0 > div {
+                background: lightgoldenrodyellow;
+            }
+            .color1, .color1 > div {
+                background: lightblue;
+            }
+            .color2, .color2 > div {
+                background: lightcoral;
+            }
+            .color3, .color3 > div {
+                background: lightgreen;
+            }
+            .color4, .color4 > div {
+                background: lightpink;
+            }
+            .color5, .color5 > div {
+                background: burlywood;
+            }
+            .color6, .color6 > div {
+                background: lightslategray;
+            }
+            .color7, .color7 > div {
+                background: violet;
+            }
+            .color8, .color8 > div {
+                background: greenyellow;
+            }
+            .color9, .color9 > div {
+                background: orange;
+            }
+            .color10, .color10 > div {
+                background: darkolivegreen;
+            }
+            .color11, .color11 > div {
+                background: palevioletred;
+            }
+            .color12, .color12 > div {
+                background: aquamarine;
+            }
+            .color13, .color13 > div {
+                background: royalblue;
             }
             img.card {
                 padding: 0px;
@@ -56,8 +104,12 @@
             }
         </style>
         <script type="text/javascript">
-            var places = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-            var flipped = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+            var districts = 13
+            var constituents = 50
+            var selectedDistrict = 0;
+            var party = Array[districts * constituents];
+            var places = Array[districts * constituents];
+            var district = Array[districts * constituents];
             initialized = false;
 
             function shuffleCards() {
@@ -95,59 +147,722 @@
             }
 
             function hide(target) {
-                if (!initialized) {
-                    return;
+                target.classList.value = "color" + selectedDistrict;
+            }
+
+            function recount() {
+                let children = document.getElementById("district_map").children;
+                let index = 0;
+                let votesD = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+                let votesR = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+                let votes = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+                for (let i = 0; i < children.length; i++) {
+                    let element = children[i]
+                    district = parseInt(element.classList.value.substring(5));
+                    votes[district] += 1;
+                    if (element.textContent == 'D')
+                        votesD[district] += 1;
+                    else
+                        votesR[district] += 1;
                 }
-                index = parseInt(target.id.substring(3))
-                flipped[index] = !flipped[index]
-                if (flipped[index]) {
-                    target.src = "images/guesswho_x.jpg";
+
+                for (let i = 0; i < votes.length; i++) {
+                    let text = "";
+                    if (votes[i] > 0){
+                        text = (votesD[i] > votesR[i] ? "Democrat" : "Republican") + " (D=" + votesD[i] + " R=" + votesR[i] + ")" 
+                    }
+                    document.getElementById("vote" + i).textContent = text;
+
                 }
-                else {
-                    target.src = "images/guesswho_" + places[index] + ".jpg";
-                }
+                console.info(votes);
+                console.info(votesD);
+                console.info(votesR);
+            }
+
+            function selectDistrict(number) {
+                console.info(number)
+                document.getElementById("select" + selectedDistrict).textContent = "\xa0";
+                document.getElementById("select" + number).textContent = "X";
+                selectedDistrict = parseInt(number)
             }
         </script>
     </head>
     <body>
         <div class="container">
             <div class="flex-child">
-                <p><strong>Opponent</strong></p>
-                <div class="table">
-                    <div><img src="images/guesswho_blank.jpg" id="img0" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img1" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img2" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img3" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img4" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img5" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img6" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img7" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img8" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img9" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img10" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img11" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img12" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img13" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img14" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img15" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img16" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img17" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img18" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img19" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img20" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img21" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img22" class="card" onclick="hide(this);" /></div>
-                    <div><img src="images/guesswho_blank.jpg" id="img23" class="card" onclick="hide(this);" /></div>
+                <p><strong>Districts Map</strong></p>
+                <div id="district_map" class="table">
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">D</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+                    <div class="color0" onclick="hide(this);" draggable="true" ondragenter="hide(this);">R</div>
+
                 </div>
             </div>
             <div class="flex-child">
-                <p><strong>Me</strong></p>
-                <img src="images/guesswho_blank.jpg" id="img_me" class="card me" />
+                <p><strong>Districts</strong></p>
                 <br />
-                <button onclick="shuffleCards();">Begin New Game</button>
+                <span id="select0" class="color0">X</span>&nbsp;<button class="color0" onclick="selectDistrict(0);">District 1</button>&nbsp;<span id="vote0" class="color0">Democrat (D=23 R=12)</span><br />
+                <span id="select1" class="color1">&nbsp;</span>&nbsp;<button class="color1" onclick="selectDistrict(1);">District 2</button>&nbsp;<span id="vote1" class="color1">Democrat (D=23 R=12)</span><br />
+                <span id="select2" class="color2">&nbsp;</span>&nbsp;<button class="color2" onclick="selectDistrict(2);">District 3</button>&nbsp;<span id="vote2" class="color2">Democrat (D=23 R=12)</span><br />
+                <span id="select3" class="color3">&nbsp;</span>&nbsp;<button class="color3" onclick="selectDistrict(3);">District 4</button>&nbsp;<span id="vote3" class="color3">Democrat (D=23 R=12)</span><br />
+                <span id="select4" class="color4">&nbsp;</span>&nbsp;<button class="color4" onclick="selectDistrict(4);">District 5</button>&nbsp;<span id="vote4" class="color4">Democrat (D=23 R=12)</span><br />
+                <span id="select5" class="color5">&nbsp;</span>&nbsp;<button class="color5" onclick="selectDistrict(5);">District 6</button>&nbsp;<span id="vote5" class="color5">Democrat (D=23 R=12)</span><br />
+                <span id="select6" class="color6">&nbsp;</span>&nbsp;<button class="color6" onclick="selectDistrict(6);">District 7</button>&nbsp;<span id="vote6" class="color6">Democrat (D=23 R=12)</span><br />
+                <span id="select7" class="color7">&nbsp;</span>&nbsp;<button class="color7" onclick="selectDistrict(7);">District 8</button>&nbsp;<span id="vote7" class="color7">Democrat (D=23 R=12)</span><br />
+                <span id="select8" class="color8">&nbsp;</span>&nbsp;<button class="color8" onclick="selectDistrict(8);">District 9</button>&nbsp;<span id="vote8" class="color8">Democrat (D=23 R=12)</span><br />
+                <span id="select9" class="color9">&nbsp;</span>&nbsp;<button class="color9" onclick="selectDistrict(9);">District 10</button>&nbsp;<span id="vote9" class="color9">Democrat (D=23 R=12)</span><br />
+                <span id="select10" class="color10">&nbsp;</span>&nbsp;<button class="color10" onclick="selectDistrict(10);">District 11</button>&nbsp;<span id="vote10" class="color10">Democrat (D=23 R=12)</span><br />
+                <span id="select11" class="color11">&nbsp;</span>&nbsp;<button class="color11" onclick="selectDistrict(11);">District 12</button>&nbsp;<span id="vote11" class="color11">Democrat (D=23 R=12)</span><br />
+                <span id="select12" class="color12">&nbsp;</span>&nbsp;<button class="color12" onclick="selectDistrict(12);">District 13</button>&nbsp;<span id="vote12" class="color12">Democrat (D=23 R=12)</span><br />
                 <br />
-                <br />
-                <button id="hideButton" onclick="resetDisplay();">Reset Flipped Cards</button>
+                <button id="hideButton" onclick="recount();">Recount Votes</button>
             </div>
         </div>
     </body>
